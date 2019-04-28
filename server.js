@@ -25,10 +25,14 @@ app.post("/fileupload", function(req, res) {
   if (Object.keys(req.files).length == 0) {
     res.redirect("/fileupload");
   }
-  let sampleFile = req.files.sampleFile;
-  sampleFile.mv("./public/files/" + req.files.sampleFile.name, function(err) {
-    if (err) return res.status(500).send(err);
-    res.redirect("/");
+  mylength = 0;
+  fs.readdir("./public/files", function(err, items) {
+    mylength = items.length;
+    let sampleFile = req.files.sampleFile;
+    sampleFile.mv("./public/files/" + mylength, function(err) {
+      if (err) return res.status(500).send(err);
+      res.redirect("/");
+    });
   });
 });
 
