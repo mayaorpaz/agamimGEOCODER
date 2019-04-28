@@ -2,9 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const fs = require("fs");
-const app = express();
-const readXlsxFile = require("read-excel-file/node");
+const Excel = require("exceljs")
+const path = require("path")
 
+const app = express();
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,7 +30,8 @@ app.post("/fileupload", function(req, res) {
   fs.readdir("./public/files", function(err, items) {
     mylength = items.length;
     let sampleFile = req.files.sampleFile;
-    sampleFile.mv("./public/files/" + mylength, function(err) {
+    let sampleFileExt = path.extname(sampleFile.name)
+    sampleFile.mv("./public/files/" + mylength + sampleFileExt , function(err) {
       if (err) return res.status(500).send(err);
       res.redirect("/");
     });
@@ -38,8 +40,14 @@ app.post("/fileupload", function(req, res) {
 
 fs.readdir("./public/files", function(err, items) {
   mypath = "./public/files/" + items[0];
-  console.log(mypath);
-  readXlsxFile(fs.createReadStream(mypath)).then(rows => {
-    console.log(rows[0]);
-  });
+  var workbook = new Excel.Workbook();
+  workbook.xlsx.readFile(mypath)
+    .then(function() {
+        var worksheet = workbook.getWorksheet(1)
+        var row = worksheet.getRow(1)
+        for(var i = 1; i<worksheet.columnCount + 1; i++){
+          console.log(i)
+          console.log(row.getCell(i).value)
+        }
+    });
 });
