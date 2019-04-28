@@ -39,15 +39,19 @@ app.post("/fileupload", function(req, res) {
 });
 
 fs.readdir("./public/files", function(err, items) {
-  mypath = "./public/files/" + items[0];
-  var workbook = new Excel.Workbook();
-  workbook.xlsx.readFile(mypath)
-    .then(function() {
-        var worksheet = workbook.getWorksheet(1)
-        var row = worksheet.getRow(1)
-        for(var i = 1; i<worksheet.columnCount + 1; i++){
-          console.log(i)
-          console.log(row.getCell(i).value)
-        }
-    });
+  if(items.length > 0){
+    mypath = "./public/files/" + items[0];
+    var workbook = new Excel.Workbook();
+    workbook.xlsx.readFile(mypath)
+      .then(function() {
+          var worksheet = workbook.getWorksheet(1)
+          var row = worksheet.getRow(1)
+          for(var i = 1; i<worksheet.columnCount + 1; i++){
+            if(row.getCell(i).value != null){
+              console.log(i)
+              console.log(row.getCell(i).value)
+            }
+          }
+      });
+    }
 });
