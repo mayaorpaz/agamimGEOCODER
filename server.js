@@ -44,10 +44,30 @@ app.post("/fileupload", function(req, res) {
     let sampleFileExt = path.extname(sampleFile.name);
     sampleFile.mv("./public/files/" + mylength + sampleFileExt, function(err) {
       if (err) return res.status(500).send(err);
-      res.redirect("/");
+      res.redirect("/select");
     });
   });
 });
+
+app.get("/select", (req, res) => {
+  fs.readdir("./public/files", function(err, items) {
+    if (items.length > 0) {
+      mypath = "./public/files/" + items[items.length-1];
+      console.log(mypath)
+      var workbook = new Excel.Workbook();
+
+      workbook.xlsx.readFile(mypath).then(function() {
+        var worksheet = workbook.getWorksheet(1);
+        var row = worksheet.getRow(1);
+        var addressColumn = worksheet.getColumn(6);
+
+        columns = row.values
+        res.render("select.ejs", {columns});
+      });
+    }
+  });
+});
+
 
 // HERE I AM READING THE 6TH COLUMN IN THE WORKSHEET WHICH IS HOLDING THE ADDRESSES,
 // LOOPING THROUGH THEM, AND GEOCODING THEM. THE RESULTING X AND Y ARE BEING SAVED IN
@@ -55,7 +75,8 @@ app.post("/fileupload", function(req, res) {
 
 fs.readdir("./public/files", function(err, items) {
   if (items.length > 0) {
-    mypath = "./public/files/" + items[0];
+    mypath = "./public/files/" + items[items.length-1];
+    console.log(mypath)
     var workbook = new Excel.Workbook();
 
     workbook.xlsx.readFile(mypath).then(function() {
@@ -63,10 +84,14 @@ fs.readdir("./public/files", function(err, items) {
       var row = worksheet.getRow(1);
       var addressColumn = worksheet.getColumn(6);
 
-      var addressList = [];
+      console.log(row.values)
+
+      /*var addressList = [];
       addressColumn.eachCell(function(cell, rowNumber) {
         addressList.push(cell.value.result);
-      });
+      });*/
+
+      //console.log(addressList)
 
       // FAILED ATTEMPT AT PROMISE ASYNC AWAIT
 
