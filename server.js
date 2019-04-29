@@ -49,9 +49,9 @@ app.post("/fileupload", function(req, res) {
   });
 });
 
-// HERE I AM READING THE COLUMN 6TH COLUMN IN THE WORKSHEET WHICH IS HOLDING THE ADDRESSES,
+// HERE I AM READING THE 6TH COLUMN IN THE WORKSHEET WHICH IS HOLDING THE ADDRESSES,
 // LOOPING THROUGH THEM, AND GEOCODING THEM. THE RESULTING X AND Y ARE BEING SAVED IN
-// TEMPX AND TEMPY ARRAYS. I THEN SAVE THE
+// TEMPX AND TEMPY ARRAYS. I THEN INSERT THEM BACK INTO THE SHEET IN NEW COLUMNS AND SAVE.
 
 fs.readdir("./public/files", function(err, items) {
   if (items.length > 0) {
@@ -96,7 +96,6 @@ fs.readdir("./public/files", function(err, items) {
           if (res != undefined) {
             tempx.push(res[0].latitude);
             tempy.push(res[0].longitude);
-            console.log(res[0].latitude);
           } else {
             tempx.push("undefined");
             tempy.push("undefined");
