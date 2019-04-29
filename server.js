@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(fileUpload());
 
-var myapi = "AIzaSyDXY_aO0xDGZX4BSOkw8w88wLpp0Q7HTIQ";
+var myapi = "Enter Google API Key Here";
 var options = {
   provider: "google",
   apiKey: myapi
@@ -47,6 +47,10 @@ app.post("/fileupload", function(req, res) {
   });
 });
 
+// HERE I AM READING THE COLUMN 6TH COLUMN IN THE WORKSHEET WHICH IS HOLDING THE ADDRESSES,
+// LOOPING THROUGH THEM, AND GEOCODING THEM. THE RESULTING X AND Y ARE BEING SAVED IN
+// TEMPX AND TEMPY ARRAYS. I THEN SAVE THE
+
 fs.readdir("./public/files", function(err, items) {
   if (items.length > 0) {
     mypath = "./public/files/" + items[0];
@@ -61,7 +65,8 @@ fs.readdir("./public/files", function(err, items) {
       addressColumn.eachCell(function(cell, rowNumber) {
         addressList.push(cell.value.result);
       });
-      console.log(addressList);
+
+      // FAILED ATTEMPT AT PROMISE ASYNC AWAIT
 
       /*function myGeocode(myAddress) {
         return new Promise(function(resolve, reject) {
@@ -82,30 +87,34 @@ fs.readdir("./public/files", function(err, items) {
           console.error(error);
         });*/
 
-      /*var geocodedx = [];
-      var geocodedy = [];
+      var tempx = [];
+      var tempy = [];
       for (var j = 0; j < addressList.length; j++) {
         geocoder.geocode(addressList[j], function(err, res) {
-          tempx = [];
-          tempy = [];
           if (res != undefined) {
-            geocodedx.push(res[0].latitude);
-            geocodedy.push(res[0].longitude);
+            tempx.push(res[0].latitude);
+            tempy.push(res[0].longitude);
           } else {
-            geocodedx.push("undefined");
-            geocodedy.push("undefined");
-          }
-          if (j == addressList.length) {
-            geocodedx = tempx;
-            geocodedy = tempy;
+            tempx.push("undefined");
+            tempy.push("undefined");
           }
         });
       }
-      console.log(geocodedx);
-      console.log(geocodedy);*/
+      console.log(tempx);
+      console.log(tempy);
 
-      /*worksheet.getColumn("X").values = addressList;
-      worksheet.commit();*/
+      // INSERTING TEMPX & TEMPY ARRAY INTO 'X' & 'Y' COLUMNS
+
+      worksheet.getColumn("X").values = tempx;
+      worksheet.getColumn("Y").values = tempy;
+
+      // WRITING TO NEW FILE
+
+      /*workbook.xlsx.writeFile("./public/files/0test.xlsx").then(function() {
+        console.log("xlsx file is written.");
+      });*/
+
+      // BATCH GEOCODING ISN'T ALLOWED WITH GOOGLE API
 
       /*geocoder.batchGeocode(addressList, function(err, res) {
         console.log(res);
