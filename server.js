@@ -14,7 +14,9 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(fileUpload());
 
-var myapi = "Enter Google API Key Here";
+// ENTER YOUR GOOGLE API KEY HERE
+var myapi = "ENTER GOOGLE API KEY HERE";
+
 var options = {
   provider: "google",
   apiKey: myapi
@@ -94,6 +96,7 @@ fs.readdir("./public/files", function(err, items) {
           if (res != undefined) {
             tempx.push(res[0].latitude);
             tempy.push(res[0].longitude);
+            console.log(res[0].latitude);
           } else {
             tempx.push("undefined");
             tempy.push("undefined");
