@@ -91,7 +91,7 @@ fs.readdir("./public/files", function(err, items) {
 
       var tempx = [];
       var tempy = [];
-      for (var j = 0; j < addressList.length; j++) {
+      /*for (var j = 0; j < addressList.length; j++) {
         geocoder.geocode(addressList[j], function(err, res) {
           if (res != undefined) {
             tempx.push(res[0].latitude);
@@ -101,7 +101,7 @@ fs.readdir("./public/files", function(err, items) {
             tempy.push("undefined");
           }
         });
-      }
+      }*/
       console.log(tempx);
       console.log(tempy);
 
