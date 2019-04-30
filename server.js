@@ -52,22 +52,77 @@ app.post("/fileupload", function(req, res) {
 app.get("/select", (req, res) => {
   fs.readdir("./public/files", function(err, items) {
     if (items.length > 0) {
-      mypath = "./public/files/" + items[items.length-1];
-      console.log(mypath)
+      mypath = "./public/files/" + items[items.length - 1];
+      console.log(mypath);
       var workbook = new Excel.Workbook();
 
       workbook.xlsx.readFile(mypath).then(function() {
         var worksheet = workbook.getWorksheet(1);
         var row = worksheet.getRow(1);
         var addressColumn = worksheet.getColumn(6);
-
-        columns = row.values
-        res.render("select.ejs", {columns});
+        filename = worksheet.name;
+        columns = row.values;
+        columnCount = worksheet.columnCount;
+        alphabet = [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "O",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "U",
+          "V",
+          "W",
+          "X",
+          "Y",
+          "Z",
+          "AA",
+          "AB",
+          "AC",
+          "AD",
+          "AE",
+          "AF",
+          "AG",
+          "AH",
+          "AI",
+          "AJ",
+          "AK",
+          "AL",
+          "AM",
+          "AN",
+          "AO",
+          "AP",
+          "AQ",
+          "AR",
+          "AS",
+          "AT",
+          "AU",
+          "AV",
+          "AW",
+          "AX",
+          "AY",
+          "AZ"
+        ];
+        console.log(columns);
+        res.render("select.ejs", { columns, columnCount, filename, alphabet });
       });
     }
   });
 });
-
 
 // HERE I AM READING THE 6TH COLUMN IN THE WORKSHEET WHICH IS HOLDING THE ADDRESSES,
 // LOOPING THROUGH THEM, AND GEOCODING THEM. THE RESULTING X AND Y ARE BEING SAVED IN
@@ -75,8 +130,8 @@ app.get("/select", (req, res) => {
 
 fs.readdir("./public/files", function(err, items) {
   if (items.length > 0) {
-    mypath = "./public/files/" + items[items.length-1];
-    console.log(mypath)
+    mypath = "./public/files/" + items[items.length - 1];
+    console.log(mypath);
     var workbook = new Excel.Workbook();
 
     workbook.xlsx.readFile(mypath).then(function() {
@@ -84,7 +139,8 @@ fs.readdir("./public/files", function(err, items) {
       var row = worksheet.getRow(1);
       var addressColumn = worksheet.getColumn(6);
 
-      console.log(row.values)
+      console.log(row.values);
+      console.log(worksheet.columnCount);
 
       /*var addressList = [];
       addressColumn.eachCell(function(cell, rowNumber) {
