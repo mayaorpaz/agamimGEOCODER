@@ -458,6 +458,14 @@
       .icon-bar__cells .cell-format .icon {
         background-position: -30px -105px;
       }
+      .blink_me {
+        animation: blinker 1s linear 2;
+      }
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -592,7 +600,7 @@
       </div>
       <div class="cell-content">
         <div>fx</div>
-        <div></div>
+        <div class="blink_me" style="font-weight: bolder; color: #008000">&nbsp;&nbsp;SELECT THE ADDRESS COLUMN HEADER</div>
       </div>
       <div class="cells">
         <div class="cells__spacer"></div>
@@ -619,12 +627,14 @@
         <div class="cells__number">18</div>
         <div class="cells__number">19</div>
         <div class="cells__number">20</div>
-
-        <% for(var i = 1; i<columns.length; i++){ %> 
+        <% for(var i = 1; i<columns.length; i++){ %>
         <input
+          type="submit"
           class="cells__input"
+          id="<%= columns[i] %>"
           value="<%= columns[i] %>"
           style="text-align: center; font-weight: bolder; cursor: pointer"
+          form="geocode"
         />
         <% } %>
 
@@ -636,6 +646,20 @@
         
       </div>
     </div>
+
+    <form
+          ref="geocode"
+          id="geocode"
+          action="/geocode"
+          method="post"
+        >
+        <input
+        id="col"
+        name="col"
+        type="hidden"
+        value="hello"
+      />
+      </form>
 
     <script
       src="https://code.jquery.com/jquery-3.4.0.min.js"
@@ -652,6 +676,15 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
-    <script></script>
+    <script>
+    $( document ).ready(function() {
+      <% for(var i = 1; i<columns.length; i++){ %>
+      $("#<%= columns[i] %>").click(function(){
+        $("#col").val('<%= i %>')
+      })
+      <% } %>
+    });
+    //document.getElementById("col").value = "sasa";
+    </script>
   </body>
 </html>

@@ -15,7 +15,7 @@ app.use(express.static("public"));
 app.use(fileUpload());
 
 // ENTER YOUR GOOGLE API KEY HERE
-var myapi = "ENTER GOOGLE API KEY HERE";
+var myapi = "AIzaSyDXY_aO0xDGZX4BSOkw8w88wLpp0Q7HTIQ";
 
 var options = {
   provider: "google",
@@ -30,23 +30,6 @@ app.listen(process.env.PORT || 3003, () => {
 
 app.get("/", (req, res) => {
   res.render("index.ejs");
-});
-
-app.post("/fileupload", function(req, res) {
-  console.log(req.files);
-  if (Object.keys(req.files).length == 0) {
-    res.redirect("/fileupload");
-  }
-  mylength = 0;
-  fs.readdir("./public/files", function(err, items) {
-    mylength = items.length;
-    let sampleFile = req.files.sampleFile;
-    let sampleFileExt = path.extname(sampleFile.name);
-    sampleFile.mv("./public/files/" + mylength + sampleFileExt, function(err) {
-      if (err) return res.status(500).send(err);
-      res.redirect("/select");
-    });
-  });
 });
 
 app.get("/select", (req, res) => {
@@ -124,6 +107,45 @@ app.get("/select", (req, res) => {
   });
 });
 
+app.post("/fileupload", function(req, res) {
+  console.log(req.files);
+  if (Object.keys(req.files).length == 0) {
+    res.redirect("/fileupload");
+  }
+  mylength = 0;
+  fs.readdir("./public/files", function(err, items) {
+    mylength = items.length;
+    let sampleFile = req.files.sampleFile;
+    let sampleFileExt = path.extname(sampleFile.name);
+    sampleFile.mv("./public/files/" + mylength + sampleFileExt, function(err) {
+      if (err) return res.status(500).send(err);
+      res.redirect("/select");
+    });
+  });
+});
+
+app.post("/geocode", function(req, res) {
+  fs.readdir("./public/files", function(err, items) {
+    if (items.length > 0) {
+      mypath = "./public/files/" + items[items.length - 1];
+      console.log(mypath);
+      var workbook = new Excel.Workbook();
+
+      workbook.xlsx.readFile(mypath).then(function() {
+        var worksheet = workbook.getWorksheet(1);
+        var row = worksheet.getRow(1);
+        var addressColumn = worksheet.getColumn(parseInt(req.body.col));
+        filename = worksheet.name;
+        columns = row.values;
+        columnCount = worksheet.columnCount;
+        console.log(addressColumn.values);
+      });
+    }
+  });
+  console.log(req.body);
+  res.redirect("/select");
+});
+
 // HERE I AM READING THE 6TH COLUMN IN THE WORKSHEET WHICH IS HOLDING THE ADDRESSES,
 // LOOPING THROUGH THEM, AND GEOCODING THEM. THE RESULTING X AND Y ARE BEING SAVED IN
 // TEMPX AND TEMPY ARRAYS. I THEN INSERT THEM BACK INTO THE SHEET IN NEW COLUMNS AND SAVE.
@@ -139,15 +161,15 @@ fs.readdir("./public/files", function(err, items) {
       var row = worksheet.getRow(1);
       var addressColumn = worksheet.getColumn(6);
 
-      console.log(row.values);
-      console.log(worksheet.columnCount);
+      //console.log(row.values);
+      //console.log(worksheet.columnCount);
 
-      /*var addressList = [];
+      var addressList = [];
       addressColumn.eachCell(function(cell, rowNumber) {
         addressList.push(cell.value.result);
-      });*/
+      });
 
-      //console.log(addressList)
+      console.log(addressList);
 
       // FAILED ATTEMPT AT PROMISE ASYNC AWAIT
 
@@ -172,9 +194,11 @@ fs.readdir("./public/files", function(err, items) {
 
       var tempx = [];
       var tempy = [];
-      /*for (var j = 0; j < addressList.length; j++) {
+      for (var j = 0; j < addressList.length; j++) {
         geocoder.geocode(addressList[j], function(err, res) {
+          //console.log(res);
           if (res != undefined) {
+            console.log(res[0].latitude);
             tempx.push(res[0].latitude);
             tempy.push(res[0].longitude);
           } else {
@@ -182,7 +206,7 @@ fs.readdir("./public/files", function(err, items) {
             tempy.push("undefined");
           }
         });
-      }*/
+      }
       console.log(tempx);
       console.log(tempy);
 
