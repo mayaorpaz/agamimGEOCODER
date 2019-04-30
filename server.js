@@ -5,6 +5,7 @@ const fs = require("fs");
 const Excel = require("exceljs");
 const path = require("path");
 const NodeGeocoder = require("node-geocoder");
+const async = require("async");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -169,7 +170,7 @@ fs.readdir("./public/files", function(err, items) {
         addressList.push(cell.value.result);
       });
 
-      console.log(addressList);
+      //console.log(addressList);
 
       // FAILED ATTEMPT AT PROMISE ASYNC AWAIT
 
@@ -194,7 +195,45 @@ fs.readdir("./public/files", function(err, items) {
 
       var tempx = [];
       var tempy = [];
-      for (var j = 0; j < addressList.length; j++) {
+      async.each(addressList, function(addr, callback){
+        setTimeout(function() {
+        console.log("Current: " + addr)
+          if(addr != undefined){
+            geocoder.geocode(addr, function(err, geocoded){
+              if(err){
+                callback(err);
+                return
+              }
+              if(geocoded) {
+                if(geocoded != undefined){
+                  tempx.push(geocoded[0].latitude)
+                  tempy.push(geocoded[0].longitude)
+                } else {
+                  tempx.push("undefined")
+                  tempy.push("undefined")
+                }
+                callback();
+              }
+            });
+          }
+        }, 10)
+      }, function(err){
+        if(err){
+          console.log(err)
+        } else {
+          //console.log(tempx)
+          //console.log(tempy)
+        }
+
+        console.log(tempx.length)
+        console.log(tempy.length)
+        worksheet.getColumn("X").values = tempx;
+        worksheet.getColumn("Y").values = tempy;
+        workbook.xlsx.writeFile("./public/files/0test.xlsx").then(function() {
+          console.log("xlsx file is written.");
+        });
+      })
+      /*for (var j = 0; j < addressList.length; j++) {
         geocoder.geocode(addressList[j], function(err, res) {
           //console.log(res);
           if (res != undefined) {
@@ -206,14 +245,12 @@ fs.readdir("./public/files", function(err, items) {
             tempy.push("undefined");
           }
         });
-      }
-      console.log(tempx);
-      console.log(tempy);
+      }*/
 
       // INSERTING TEMPX & TEMPY ARRAY INTO 'X' & 'Y' COLUMNS
 
-      worksheet.getColumn("X").values = tempx;
-      worksheet.getColumn("Y").values = tempy;
+      //worksheet.getColumn("x").values = tempx;
+      //worksheet.getColumn("y").values = tempy;
 
       // WRITING TO NEW FILE
 
