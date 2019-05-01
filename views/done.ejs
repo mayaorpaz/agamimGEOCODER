@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>agamimGEOCODER</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        background-color: #ffffff;
+        height: 100%;
+      }
+
+      .wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .wrapper .file-upload {
+        height: 200px;
+        width: 200px;
+        border-radius: 100px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid #ffffff;
+        overflow: hidden;
+        background-image: linear-gradient(to bottom, #008000 50%, #ffffff 50%);
+        background-size: 100% 200%;
+        transition: all 1s;
+        color: #ffffff;
+        font-size: 100px;
+      }
+      .wrapper .file-upload input[type="file"] {
+        height: 200px;
+        width: 200px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .wrapper .file-upload:hover {
+        background-position: 0 -100%;
+        color: #008000;
+      }
+      a {
+        color: transparent !important;
+        text-decoration: none !important; /* no underline */
+      }
+    </style>
+  </head>
+  <body>
+    <!--<div class="container text-center">
+      <div class="card shadow-lg mt-5">
+        <div class="card-header">
+          Upload an Excel file (.xlsx)
+        </div>
+        <div class="card-body">
+          <form
+            ref="uploadForm"
+            id="uploadForm"
+            action="/fileupload"
+            method="post"
+            encType="multipart/form-data"
+          >
+            <input type="file" name="sampleFile" id="sheet" /><br /><br />
+            <input type="submit" value="Upload File" class="btn btn-primary" />
+          </form>
+        </div>
+      </div>
+    </div>-->
+    <div class="wrapper">
+      <div class="file-upload">
+        <form
+          ref="uploadForm"
+          id="uploadForm"
+          action="/fileupload"
+          method="post"
+          encType="multipart/form-data"
+        >
+          <!--<input type="file" name="sampleFile" id="sheet" />-->
+        </form>
+        <a href="<%= finalpath %>" download
+          ><i
+            id="finished"
+            class="fas fa-file-download"
+            style="color: white !important"
+          ></i
+        ></a>
+      </div>
+      <!--<div class="m-1">
+        <input type="submit" value="UPLOAD&#x27a4" form="uploadForm" style="background-color: transparent;border: none; color: #008000;font-weight: bolder; display:none" disabled>
+      </div>-->
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.0.min.js"
+      integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(document).ready(
+        $(".file-upload")
+          .mouseover(function() {
+            $("#finished").css("color", "#008000");
+          })
+          .mouseout(function() {
+            $("#finished").css("color", "white");
+          })
+      );
+    </script>
+  </body>
+</html>

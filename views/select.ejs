@@ -631,7 +631,7 @@
         <input
           type="submit"
           class="cells__input"
-          id="<%= columns[i] %>"
+          id="<%= columns[i].replace(/[\s.;,?%0-9]/, '') %>"
           value="<%= columns[i] %>"
           style="text-align: center; font-weight: bolder; cursor: pointer"
           form="geocode"
@@ -679,8 +679,10 @@
     <script>
     $( document ).ready(function() {
       <% for(var i = 1; i<columns.length; i++){ %>
-      $("#<%= columns[i] %>").click(function(){
+      $("#<%= columns[i].replace(/[\s.;,?%]/, '') %>").click(function(){
         $("#col").val('<%= i %>')
+        $("")
+        console.log(document.getElementById("col"))
       })
       <% } %>
     });
