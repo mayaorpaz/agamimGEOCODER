@@ -33,6 +33,10 @@ app.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
+app.get("/error", (req, res) => {
+  res.render("error.ejs");
+});
+
 app.get("/done", (req, res) => {
   fs.readdir("./public/completed", function(err, items) {
     if (items.length > 0) {
@@ -45,9 +49,17 @@ app.get("/done", (req, res) => {
 
 app.get("/select", (req, res) => {
   fs.readdir("./public/files", function(err, items) {
+    if (err) {
+      res.redirect("/error");
+    }
     if (items.length > 0) {
       mypath = "./public/files/" + items[items.length - 1];
       console.log(mypath);
+      console.log(path.extname(mypath));
+      if (path.extname(mypath) != ".xlsx") {
+        myerror = "FILE MUST BE .XLSX";
+        res.render("error.ejs", { myerror });
+      }
       var workbook = new Excel.Workbook();
 
       workbook.xlsx.readFile(mypath).then(function() {
@@ -119,7 +131,7 @@ app.get("/select", (req, res) => {
 });
 
 app.post("/fileupload", function(req, res) {
-  console.log(req.files);
+  console.log("FILENAME: " + req.files.sampleFile.name);
   if (Object.keys(req.files).length == 0) {
     res.redirect("/fileupload");
   }
@@ -128,10 +140,16 @@ app.post("/fileupload", function(req, res) {
     mylength = items.length;
     let sampleFile = req.files.sampleFile;
     let sampleFileExt = path.extname(sampleFile.name);
-    sampleFile.mv("./public/files/" + mylength + sampleFileExt, function(err) {
-      if (err) return res.status(500).send(err);
-      res.redirect("/select");
-    });
+    if (sampleFileExt == ".xlsx") {
+      sampleFile.mv("./public/files/" + mylength + sampleFileExt, function(
+        err
+      ) {
+        if (err) return res.status(500).send(err);
+        res.redirect("/select");
+      });
+    } else {
+      res.render("error.ejs", { myerror: "File extension must be .XLSX" });
+    }
   });
 });
 
@@ -150,16 +168,12 @@ app.post("/geocode", function(req, res) {
         columns = row.values;
         columnCount = worksheet.columnCount;
         addressList = [];
-        //console.log(typeof addressColumn.values);
-        //console.log(addressColumn.values[3].result);
         if (addressColumn.values[3].result != undefined) {
           addressColumn.eachCell(function(cell, rowNumber) {
             addressList.push(cell.result);
-            //console.log("hello");
           });
         } else {
           addressList = addressColumn.values;
-          console.log("hello2");
         }
         console.log(addressList.slice(0, 10));
 
@@ -170,7 +184,6 @@ app.post("/geocode", function(req, res) {
           function(addr, callback) {
             //console.log(addr);
             setTimeout(function() {
-              //console.log("Current: " + addr);
               if (addr != undefined) {
                 geocoder.geocode(addr, function(err, geocoded) {
                   if (err) {
@@ -181,11 +194,11 @@ app.post("/geocode", function(req, res) {
                     if (geocoded != undefined) {
                       tempx.push(geocoded[0].latitude);
                       tempy.push(geocoded[0].longitude);
+                      callback();
                     } else {
                       tempx.push("undefined");
                       tempy.push("undefined");
                     }
-                    callback();
                   }
                 });
               }
@@ -198,6 +211,13 @@ app.post("/geocode", function(req, res) {
 
             console.log(tempx.length);
             console.log(tempy.length);
+            tempy.length = 0;
+            if (tempx.length == 0 || tempy.length == 0) {
+              res.render("error.ejs", {
+                myerror:
+                  "There was an error geocoding this column. Please try again."
+              });
+            }
             worksheet.getColumn("X").values = tempx;
             worksheet.getColumn("Y").values = tempy;
             fs.readdir("./public/completed", function(err, items) {
