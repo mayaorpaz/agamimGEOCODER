@@ -170,10 +170,12 @@ app.post("/geocode", function(req, res) {
         addressList = [];
         if (addressColumn.values[3].result != undefined) {
           addressColumn.eachCell(function(cell, rowNumber) {
-            addressList.push(cell.result);
+            addressList.push({ address: cell.result, row: rowNumber });
           });
         } else {
-          addressList = addressColumn.values;
+          addressColumn.eachCell(function(cell, rowNumber) {
+            addressList.push({ address: cell.value, row: rowNumber });
+          });
         }
         console.log(addressList.slice(0, 10));
 
@@ -182,27 +184,26 @@ app.post("/geocode", function(req, res) {
         async.each(
           addressList,
           function(addr, callback) {
-            //console.log(addr);
-            setTimeout(function() {
-              if (addr != undefined) {
-                geocoder.geocode(addr, function(err, geocoded) {
-                  if (err) {
-                    callback(err);
-                    return;
+            if (addr.address != undefined) {
+              geocoder.geocode(addr.address, function(err, geocoded) {
+                if (err) {
+                  callback(err);
+                  return;
+                }
+                if (geocoded) {
+                  if (geocoded != undefined) {
+                    tempx.push({ result: geocoded[0].latitude, row: addr.row });
+                    tempy.push({
+                      result: geocoded[0].longitude,
+                      row: addr.row
+                    });
+                  } else {
+                    tempx.push("undefined");
+                    tempy.push("undefined");
                   }
-                  if (geocoded) {
-                    if (geocoded != undefined) {
-                      tempx.push(geocoded[0].latitude);
-                      tempy.push(geocoded[0].longitude);
-                      callback();
-                    } else {
-                      tempx.push("undefined");
-                      tempy.push("undefined");
-                    }
-                  }
-                });
-              }
-            }, 50);
+                }
+              });
+            }
           },
           function(err) {
             if (err) {
@@ -211,14 +212,15 @@ app.post("/geocode", function(req, res) {
 
             console.log(tempx.length);
             console.log(tempy.length);
-            tempy.length = 0;
             if (tempx.length == 0 || tempy.length == 0) {
               res.render("error.ejs", {
                 myerror:
                   "There was an error geocoding this column. Please try again."
               });
             }
-            worksheet.getColumn("X").values = tempx;
+            console.log(tempx);
+            console.log(worksheet.columnCount);
+            /*worksheet.getColumn("X").values = tempx;
             worksheet.getColumn("Y").values = tempy;
             fs.readdir("./public/completed", function(err, items) {
               placeholder = 0;
@@ -230,7 +232,7 @@ app.post("/geocode", function(req, res) {
                 console.log(mypath2 + " -- file is written.");
                 res.redirect("/done");
               });
-            });
+            });*/
           }
         );
       });
