@@ -220,8 +220,8 @@ app.post("/geocode", function(req, res) {
             }
             console.log(tempx);
             console.log(worksheet.columnCount);
-            /*worksheet.getColumn("X").values = tempx;
-            worksheet.getColumn("Y").values = tempy;
+            /*worksheet.getColumn(columnCount + 1).values = tempx;
+            worksheet.getColumn(columnCount).values = tempy;
             fs.readdir("./public/completed", function(err, items) {
               placeholder = 0;
               if (items != undefined) {
