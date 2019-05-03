@@ -192,9 +192,9 @@ app.post("/geocode", function(req, res) {
                 }
                 if (geocoded) {
                   if (geocoded != undefined) {
-                    tempx.push({ result: geocoded[0].latitude, row: addr.row });
+                    tempx.push({ resultx: geocoded[0].latitude, row: addr.row });
                     tempy.push({
-                      result: geocoded[0].longitude,
+                      resulty: geocoded[0].longitude,
                       row: addr.row
                     });
                   } else {
@@ -219,9 +219,22 @@ app.post("/geocode", function(req, res) {
               });
             }
             console.log(tempx);
-            console.log(worksheet.columnCount);
-            /*worksheet.getColumn(columnCount + 1).values = tempx;
-            worksheet.getColumn(columnCount).values = tempy;
+            xcol = worksheet.getColumn(columnCount + 1);
+            ycol = worksheet.getColumn(columnCount + 2);
+            xcol.eachCell({ includeEmpty: true}, function(cell, rowNumber){
+              for(var i = 0; i<tempx.length; i++){
+                if(tempx[i].row == rowNumber){
+                  cell.value = tempx[i].resultx
+                }
+              }
+            })
+            ycol.eachCell({ includeEmpty: true}, function(cell, rowNumber){
+              for(var i = 0; i<tempy.length; i++){
+                if(tempy[i].row == rowNumber){
+                  cell.value = tempy[i].resulty
+                }
+              }
+            })
             fs.readdir("./public/completed", function(err, items) {
               placeholder = 0;
               if (items != undefined) {
@@ -232,7 +245,7 @@ app.post("/geocode", function(req, res) {
                 console.log(mypath2 + " -- file is written.");
                 res.redirect("/done");
               });
-            });*/
+            });
           }
         );
       });
