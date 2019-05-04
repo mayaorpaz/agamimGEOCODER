@@ -50,7 +50,83 @@ app.get("/done", (req, res) => {
     if (items.length > 0) {
       finalpath = "completed/" + items[items.length - 1];
       console.log(finalpath);
-      res.render("done.ejs", { finalpath });
+      var workbook = new Excel.Workbook();
+
+      workbook.xlsx.readFile("./public/" + finalpath).then(function() {
+        var worksheet = workbook.getWorksheet(1);
+        var row = worksheet.getRow(1);
+        cells = []
+        for(var i = 2; i<worksheet.rowCount+1; i++){
+          for(var j = 1; j<worksheet.getRow(i).values.length; j++){
+            if(typeof worksheet.getRow(i).values[j] == 'object'){
+              cells.push(worksheet.getRow(i).values[j].result)
+            } else{
+            cells.push(worksheet.getRow(i).values[j])
+          }
+          }
+        }
+        console.log(cells)
+        var addressColumn = worksheet.getColumn(6);
+        filename = worksheet.name;
+        columns = row.values;
+        columnCount = worksheet.columnCount;
+        alphabet = [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "O",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "U",
+          "V",
+          "W",
+          "X",
+          "Y",
+          "Z",
+          "AA",
+          "AB",
+          "AC",
+          "AD",
+          "AE",
+          "AF",
+          "AG",
+          "AH",
+          "AI",
+          "AJ",
+          "AK",
+          "AL",
+          "AM",
+          "AN",
+          "AO",
+          "AP",
+          "AQ",
+          "AR",
+          "AS",
+          "AT",
+          "AU",
+          "AV",
+          "AW",
+          "AX",
+          "AY",
+          "AZ"
+        ];
+        //console.log(columns);
+        res.render("done.ejs", { columns, columnCount, filename, alphabet, cells });
+      });
     }
   });
 });
@@ -75,7 +151,7 @@ app.get("/select", (req, res) => {
         var worksheet = workbook.getWorksheet(1);
         var row = worksheet.getRow(1);
         cells = []
-        for(var i = 2; i<worksheet.rowCount; i++){
+        for(var i = 2; i<worksheet.rowCount+1; i++){
           for(var j = 1; j<worksheet.getRow(i).values.length; j++){
             if(typeof worksheet.getRow(i).values[j] == 'object'){
               cells.push(worksheet.getRow(i).values[j].result)
@@ -252,6 +328,8 @@ app.post("/geocode", function(req, res) {
             console.log(tempx);
             xcol = worksheet.getColumn(columnCount + 1);
             ycol = worksheet.getColumn(columnCount + 2);
+            xcol.header = 'Latitude'
+            ycol.header = 'Longitude'
             xcol.eachCell({ includeEmpty: true}, function(cell, rowNumber){
               for(var i = 0; i<tempx.length; i++){
                 if(tempx[i].row == rowNumber){

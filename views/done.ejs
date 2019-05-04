@@ -148,8 +148,8 @@
       position: relative;
       display: grid;
       grid-template-columns: 40px repeat(
-          6,
-          calc((100% - 50px) / 6)
+          <%= columns.length - 1 %>,
+          calc((100% - 50px) / <%= columns.length - 1 %>)
         );
       grid-template-rows: repeat(21, 25px);
       grid-gap: 1px;
@@ -704,12 +704,9 @@
       </div>
       <div class="cells">
         <div class="cells__spacer"></div>
-        <div class="cells__alphabet">A</div>
-        <div class="cells__alphabet">B</div>
-        <div class="cells__alphabet">C</div>
-        <div class="cells__alphabet">D</div>
-        <div class="cells__alphabet">E</div>
-        <div class="cells__alphabet">F</div>
+        <% for(var i = 0; i<columns.length - 1; i++){ %>
+        <div class="cells__alphabet"><%= alphabet[i] %></div>
+        <% } %>
         <div class="cells__number">1</div>
         <div class="cells__number">2</div>
         <div class="cells__number">3</div>
@@ -730,8 +727,22 @@
         <div class="cells__number">18</div>
         <div class="cells__number">19</div>
         <div class="cells__number">20</div>
-        <% for(var i = 0; i<6 * 20; i++){ %>
-        <input class="cells__input" />
+        <% for(var i = 1; i<columns.length; i++){ %>
+        <input
+          type="submit"
+          class="cells__input"
+          id="<%= columns[i].replace(/[\s.;,?%0-9]/, '') %>"
+          value="<%= columns[i] %>"
+          style="text-align: center; font-weight: bolder; cursor: pointer"
+          form="geocode"
+        />
+        <% } %>
+
+        <% fixedLength = columns.length - 1 %>
+        <% cellsLength = fixedLength * 19 %>
+        <% for(var i = 0; i<cellsLength; i++){ %>
+        <!--<input class="cells__input" />-->
+        <input value="<%= cells[i] %>" class="cells__input" />
         <% } %>
       </div>
     </div>
