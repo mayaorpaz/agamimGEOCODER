@@ -518,6 +518,11 @@
         background-position: 0 -100%;
         color: #217245;
       }
+      button:focus {outline:0;}
+      a {
+        color: transparent !important;
+        text-decoration: none !important; /* no underline */
+      }
     </style>
   </head>
   <body>
@@ -540,6 +545,48 @@
         </div>
       </div>
     </div>-->
+    <div style="position: absolute; top: 7.5px; left: 7.5px">
+      <button type="button" data-toggle="modal" data-target="#exampleModalCenter" style="background-color: transparent; border: none">
+        <i class="far fa-question-circle" style="color: white; font-weight: bolder; font-size: 35px"></i>
+      </button>
+    </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-lg modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content" style="background-color: #217245; color: white">
+        <div class="modal-header text-center">
+          <h5 class="modal-title w-100" id="exampleModalLongTitle">Agamim Excel Geocoder</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" style="color: white">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          Step 1: Upload an .xlsx file containing addresses<br>
+          <!--<img class="mt-3" src="gif1.gif" width="40%"><hr>-->
+          <video id="firstone" width="40%" autoplay muted>
+              <source src="mov1.mov" type="video/mp4">
+          </video><br>
+          Click here for test file: <a href="GeocodeTest.xlsx" download><p style="color: darkgray">GeocodeTest.xlsx</p></a><hr>
+          Step 2: Select the address column header<br>
+          <video width="100%" loop autoplay muted>
+              <source src="mov2.mov" type="video/mp4">
+          </video><br>
+          <hr>
+          Notes:<br>
+          If you are geocoding street names, <b>make sure to include <u>city</u> as well!</b><br>
+          Curruntly only .xlsx files are supported.<br>
+          .CSV support is coming soon.
+          <hr>
+          If you find any issues, please contact Dan<br>
+          dee.aye.en@gmail.com
+
+        </div>
+        <!--<div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>-->
+      </div>
+    </div>
+  </div>
     <div class="wrapper pt-3" style="background-color: #217245">
       <div class="file-upload">
         <form
@@ -755,6 +802,13 @@
             }
             );
     });
+    document.getElementById('firstone').addEventListener('ended',myHandler,false);
+function myHandler(e) {
+    console.log('ended');
+    setTimeout(function(){
+        document.getElementById('firstone').play();
+    }, 5000);
+}
     </script>
   </body>
 </html>
