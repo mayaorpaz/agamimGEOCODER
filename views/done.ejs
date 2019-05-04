@@ -526,7 +526,7 @@
       }
     </style>
   </head>
-  <body>
+  <body style="background-color: #217245">
     <!--<div class="container text-center">
       <div class="card shadow-lg mt-5">
         <div class="card-header">
@@ -561,7 +561,7 @@
           ><i
             id="finished"
             class="fas fa-file-download"
-            style="color: white !important"
+            style="color: white !important; display:none"
           ></i
         ></a>
       </div>
@@ -772,7 +772,7 @@
             $("#finished").css("color", "white");
           })
       );
-      $("#finished").click(function() {
+      $("#finished").fadeIn().click(function() {
         window.location.href = "/";
       });
     </script>
