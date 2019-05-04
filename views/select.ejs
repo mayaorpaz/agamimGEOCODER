@@ -710,7 +710,8 @@
         <% fixedLength = columns.length - 1 %>
         <% cellsLength = fixedLength * 19 %>
         <% for(var i = 0; i<cellsLength; i++){ %>
-        <input class="cells__input" />
+        <!--<input class="cells__input" />-->
+        <input value="<%= cells[i] %>" class="cells__input" />
         <% } %>
 
       </div>

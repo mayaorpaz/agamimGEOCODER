@@ -74,6 +74,17 @@ app.get("/select", (req, res) => {
       workbook.xlsx.readFile(mypath).then(function() {
         var worksheet = workbook.getWorksheet(1);
         var row = worksheet.getRow(1);
+        cells = []
+        for(var i = 2; i<worksheet.rowCount; i++){
+          for(var j = 1; j<worksheet.getRow(i).values.length; j++){
+            if(typeof worksheet.getRow(i).values[j] == 'object'){
+              cells.push(worksheet.getRow(i).values[j].result)
+            } else{
+            cells.push(worksheet.getRow(i).values[j])
+          }
+          }
+        }
+        console.log(cells)
         var addressColumn = worksheet.getColumn(6);
         filename = worksheet.name;
         columns = row.values;
@@ -133,7 +144,7 @@ app.get("/select", (req, res) => {
           "AZ"
         ];
         //console.log(columns);
-        res.render("select.ejs", { columns, columnCount, filename, alphabet });
+        res.render("select.ejs", { columns, columnCount, filename, alphabet, cells });
       });
     }
   });
