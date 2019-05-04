@@ -159,6 +159,7 @@ app.post("/fileupload", function(req, res) {
 });
 
 app.post("/geocode", function(req, res) {
+  handler = 0
   fs.readdir("./public/files", function(err, items) {
     if (items.length > 0) {
       mypath = "./public/files/" + items[items.length - 1];
@@ -214,11 +215,12 @@ app.post("/geocode", function(req, res) {
               console.log(err);
             }
             if(handler == 1) {
+              handler = 2
               res.render('error.ejs', {myerror: 'Could not geocode this column accurately. Please make sure it contains a full address including CITY.'})
             } else{
             console.log(tempx.length);
             console.log(tempy.length);
-            if (tempx.length == 0 || tempy.length == 0) {
+            if (tempx.length == 0 || tempy.length == 0 && handler == 0) {
               res.render("error.ejs", {
                 myerror:
                   "There was an error geocoding this column. Please try again."
@@ -246,7 +248,7 @@ app.post("/geocode", function(req, res) {
               if (items != undefined) {
                 placeholder = items.length;
               }
-              mypath2 = "./public/completed/" + placeholder + ".xlsx";
+              mypath2 = "./public/completed/" + (new Date).getTime() + ".xlsx";
               workbook.xlsx.writeFile(mypath2).then(function() {
                 console.log(mypath2 + " -- file is written.");
                 res.redirect("/done");

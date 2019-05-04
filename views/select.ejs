@@ -466,9 +466,61 @@
           opacity: 0;
         }
       }
+      .wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .wrapper .file-upload {
+        height: 200px;
+        width: 200px;
+        border-radius: 100px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid #ffffff;
+        overflow: hidden;
+        background-image: linear-gradient(to bottom, #217245 50%, #ffffff 50%);
+        background-size: 100% 200%;
+        transition: all 1s;
+        color: #ffffff;
+        font-size: 100px;
+      }
+      .wrapper .file-upload input[type="file"] {
+        height: 200px;
+        width: 200px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .wrapper .file-upload:hover {
+        background-position: 0 -100%;
+        color: #217245;
+      }
     </style>
   </head>
   <body>
+    <div class="wrapper pt-3" style="background-color: #217245">
+      <div class="file-upload">
+        <form
+          ref="uploadForm"
+          id="uploadForm"
+          action="/fileupload"
+          method="post"
+          encType="multipart/form-data"
+        >
+          <!--<input type="file" name="sampleFile" id="sheet" />-->
+        </form>
+        <img
+            src="loading.svg"
+          >
+        </div>
+      </div>
     <div class="main-content">
       <div class="title"><%= filename %></div>
       <div class="menu-bar">
@@ -643,7 +695,7 @@
         <% for(var i = 0; i<cellsLength; i++){ %>
         <input class="cells__input" />
         <% } %>
-        
+
       </div>
     </div>
 
