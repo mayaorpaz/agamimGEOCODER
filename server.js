@@ -54,6 +54,7 @@ app.get("/select", (req, res) => {
     }
     if (items.length > 0) {
       mypath = "./public/files/" + items[items.length - 1];
+      console.log(items)
       console.log(mypath);
       console.log(path.extname(mypath));
       if (path.extname(mypath) != ".xlsx") {
@@ -131,7 +132,7 @@ app.get("/select", (req, res) => {
 });
 
 app.post("/fileupload", function(req, res) {
-  console.log("FILENAME: " + req.files.sampleFile.name);
+  console.log("FILENAME: " + req.files.sampleFile.name.slice(0,-5));
   if (Object.keys(req.files).length == 0) {
     res.redirect("/fileupload");
   }
@@ -140,8 +141,11 @@ app.post("/fileupload", function(req, res) {
     mylength = items.length;
     let sampleFile = req.files.sampleFile;
     let sampleFileExt = path.extname(sampleFile.name);
+    if(sampleFile.size > 50000000){
+      res.render("error.ejs", { myerror: "Maximum file size: 50mb" })
+    } else {
     if (sampleFileExt == ".xlsx") {
-      sampleFile.mv("./public/files/" + mylength + sampleFileExt, function(
+      sampleFile.mv("./public/files/" + (new Date).getTime() + "-" + req.files.sampleFile.name.replace(/\s/g, ''), function(
         err
       ) {
         if (err) return res.status(500).send(err);
@@ -149,6 +153,7 @@ app.post("/fileupload", function(req, res) {
       });
     } else {
       res.render("error.ejs", { myerror: "File extension must be .XLSX" });
+    }
     }
   });
 });
@@ -191,15 +196,14 @@ app.post("/geocode", function(req, res) {
                   return;
                 }
                 if (geocoded) {
-                  if (geocoded != undefined) {
+                  if (geocoded != undefined && geocoded[0] != undefined) {
                     tempx.push({ resultx: geocoded[0].latitude, row: addr.row });
                     tempy.push({
                       resulty: geocoded[0].longitude,
                       row: addr.row
                     });
                   } else {
-                    tempx.push("undefined");
-                    tempy.push("undefined");
+                    handler = 1
                   }
                 }
               });
@@ -209,7 +213,9 @@ app.post("/geocode", function(req, res) {
             if (err) {
               console.log(err);
             }
-
+            if(handler == 1) {
+              res.render('error.ejs', {myerror: 'Could not geocode this column accurately. Please make sure it contains a full address including CITY.'})
+            } else{
             console.log(tempx.length);
             console.log(tempy.length);
             if (tempx.length == 0 || tempy.length == 0) {
@@ -246,6 +252,7 @@ app.post("/geocode", function(req, res) {
                 res.redirect("/done");
               });
             });
+          }
           }
         );
       });
