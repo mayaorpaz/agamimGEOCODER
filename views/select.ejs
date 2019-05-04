@@ -533,7 +533,7 @@
         >
           <!--<input type="file" name="sampleFile" id="sheet" />-->
         </form>
-        <img
+        <img id="loady"
             src="loading.svg"
           >
         </div>
@@ -756,6 +756,29 @@
       })
       <% } %>
     });
+    tracker = 0
+    $(".file-upload").mouseover(function() {
+      setTimeout(function(){
+      $("#loady").attr("src", "loading2.svg")
+    }, 350)
+    }).mouseout(function (){
+      if(tracker == 0){
+      setTimeout(function() {
+      $("#loady").attr("src", "loading3.svg")
+      tracker = 1
+    }, 350)
+    } else if(tracker == 1) {
+      setTimeout(function() {
+      $("#loady").attr("src", "loading4.svg")
+      tracker = 2
+    }, 350)
+    } else {
+      setTimeout(function() {
+      $("#loady").attr("src", "loading.svg")
+      tracker = 0
+    }, 350)
+    }
+    })
     //document.getElementById("col").value = "sasa";
     </script>
   </body>
