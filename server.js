@@ -174,7 +174,7 @@ app.post("/geocode", function(req, res) {
         columns = row.values;
         columnCount = worksheet.columnCount;
         addressList = [];
-        if (addressColumn.values[3].result != undefined) {
+        if (addressColumn.values[2].result != undefined) {
           addressColumn.eachCell(function(cell, rowNumber) {
             addressList.push({ address: cell.result, row: rowNumber });
           });
@@ -183,7 +183,7 @@ app.post("/geocode", function(req, res) {
             addressList.push({ address: cell.value, row: rowNumber });
           });
         }
-        console.log(addressList.slice(1, 10));
+        console.log(addressList.slice(0, 10));
 
         var tempx = [];
         var tempy = [];
@@ -212,7 +212,7 @@ app.post("/geocode", function(req, res) {
             }
           },
           function(err) {
-            console.log("Handler" + handler)
+            console.log("Handler: " + handler)
             if (err) {
               console.log(err);
             }
