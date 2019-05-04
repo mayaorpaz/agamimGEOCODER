@@ -183,12 +183,12 @@ app.post("/geocode", function(req, res) {
             addressList.push({ address: cell.value, row: rowNumber });
           });
         }
-        console.log(addressList.slice(0, 10));
+        console.log(addressList.slice(1, 10));
 
         var tempx = [];
         var tempy = [];
         async.each(
-          addressList,
+          addressList.slice(1),
           function(addr, callback) {
             if (addr.address != undefined) {
               geocoder.geocode(addr.address, function(err, geocoded) {
@@ -203,6 +203,7 @@ app.post("/geocode", function(req, res) {
                       resulty: geocoded[0].longitude,
                       row: addr.row
                     });
+                    callback();
                   } else {
                     handler = 1
                   }
@@ -211,12 +212,15 @@ app.post("/geocode", function(req, res) {
             }
           },
           function(err) {
+            console.log("Handler" + handler)
             if (err) {
               console.log(err);
             }
             if(handler == 1) {
               handler = 2
+              console.log("Handler: " + handler)
               res.render('error.ejs', {myerror: 'Could not geocode this column accurately. Please make sure it contains a full address including CITY.'})
+
             } else{
             console.log(tempx.length);
             console.log(tempy.length);
