@@ -265,8 +265,8 @@ app.post("/geocode", function(req, res) {
                 console.log(mypath2 + " -- file is written.");
                 totalrows = worksheet.rowCount - 1
                 geocodedrows = tempx.length
-                total1 = geocodedrows/totalrows
-                total = Math.floor(total1 * 100)
+                fractiontotal = geocodedrows/totalrows
+                total = Math.floor(fractiontotal * 100)
                 req.flash('notify', 'Geocoded ' + total + "% of addresses!")
                 res.redirect("/done");
               });
