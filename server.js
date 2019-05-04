@@ -6,6 +6,9 @@ const Excel = require("exceljs");
 const path = require("path");
 const NodeGeocoder = require("node-geocoder");
 const async = require("async");
+const flash = require('express-flash-messages');
+var session = require('express-session');
+
 
 const app = express();
 app.set("view engine", "ejs");
@@ -14,9 +17,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(fileUpload());
+app.use(flash())
+app.use(session({ cookie: { maxAge: 60000 },
+                  secret: 'woot',
+                  resave: false,
+                  saveUninitialized: false}));
 
 // ENTER YOUR GOOGLE API KEY HERE
-var myapi = "ENTER API KEY HERE";
+var myapi = "ENTER YOUR API KEY HERE";
 
 var options = {
   provider: "google",
@@ -255,6 +263,11 @@ app.post("/geocode", function(req, res) {
               mypath2 = "./public/completed/" + (new Date).getTime() + ".xlsx";
               workbook.xlsx.writeFile(mypath2).then(function() {
                 console.log(mypath2 + " -- file is written.");
+                totalrows = worksheet.rowCount - 1
+                geocodedrows = tempx.length
+                total1 = geocodedrows/totalrows
+                total = Math.floor(total1 * 100)
+                req.flash('notify', 'Geocoded ' + total + "% of addresses!")
                 res.redirect("/done");
               });
             });
