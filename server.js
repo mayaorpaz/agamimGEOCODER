@@ -16,7 +16,7 @@ app.use(express.static("public"));
 app.use(fileUpload());
 
 // ENTER YOUR GOOGLE API KEY HERE
-var myapi = "AIzaSyDkG702RFFEEm08CP87sLK_amm-ru_eUVs";
+var myapi = "ENTER API KEY HERE";
 
 var options = {
   provider: "google",
