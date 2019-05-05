@@ -24,7 +24,7 @@ app.use(session({ cookie: { maxAge: 60000 },
                   saveUninitialized: false}));
 
 // ENTER YOUR GOOGLE API KEY HERE
-var myapi = "ENTER YOUR API KEY HERE";
+var myapi = "ENTER API KEY HERE";
 
 var options = {
   provider: "google",
@@ -67,8 +67,8 @@ app.get("/done", (req, res) => {
               cells.push(worksheet.getRow(myrows[i]).values[j].result)
             } else{
               if(worksheet.getRow(myrows[i]).values[j] != undefined){
-            cells.push(worksheet.getRow(myrows[i]).values[j])
-          }
+                cells.push(worksheet.getRow(myrows[i]).values[j])
+              }
           }
           }
         }
@@ -355,7 +355,9 @@ app.post("/geocode", function(req, res) {
               mypath2 = "./public/completed/" + (new Date).getTime() + ".xlsx";
               workbook.xlsx.writeFile(mypath2).then(function() {
                 console.log(mypath2 + " -- file is written.");
-                totalrows = worksheet.rowCount - 1
+                prerow = []
+                getme = worksheet.getColumn(1).values
+                totalrows = getme.length - 2
                 geocodedrows = tempx.length
                 fractiontotal = geocodedrows/totalrows
                 total = Math.floor(fractiontotal * 100)
