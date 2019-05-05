@@ -143,13 +143,17 @@
       font: italic 700 18px "Merriweather", serif;
       border-right: none;
     }
-
+    <% var mycollen = 0 %>
+    <% for(var i = 1; i<columns.length; i++){ %>
+    <% if(columns[i] != undefined){ %>
+    <% mycollen++ %>
+    <% }} %>
     .cells {
       position: relative;
       display: grid;
       grid-template-columns: 40px repeat(
-          <%= columns.length - 1 %>,
-          calc((100% - 50px) / <%= columns.length - 1 %>)
+          <%= mycollen %>,
+          calc((100% - 50px) / <%= mycollen %>)
         );
       grid-template-rows: repeat(21, 25px);
       grid-gap: 1px;
@@ -703,9 +707,10 @@
       </div>
       <div class="cells">
         <div class="cells__spacer"></div>
-        <% for(var i = 0; i<columns.length - 1; i++){ %>
+        <% for(var i = 0; i<columns.length; i++){ %>
+        <% if(columns[i] != undefined){ %>
         <div class="cells__alphabet"><%= alphabet[i] %></div>
-        <% } %>
+        <% }} %>
         <div class="cells__number">1</div>
         <div class="cells__number">2</div>
         <div class="cells__number">3</div>
@@ -727,15 +732,15 @@
         <div class="cells__number">19</div>
         <div class="cells__number">20</div>
         <% for(var i = 1; i<columns.length; i++){ %>
+        <% if(columns[i] != undefined){ %>
         <input
-          type="submit"
           class="cells__input"
-          id="<%= columns[i].replace(/[\s.;,?%0-9]/, '') %>"
+          id=""
           value="<%= columns[i] %>"
-          style="text-align: center; font-weight: bolder; cursor: pointer"
+          style="text-align: center; font-weight: bolder; cursor:"
           form="geocode"
         />
-        <% } %>
+        <% }} %>
 
         <% fixedLength = columns.length - 1 %>
         <% cellsLength = fixedLength * 19 %>

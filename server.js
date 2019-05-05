@@ -55,17 +55,23 @@ app.get("/done", (req, res) => {
       workbook.xlsx.readFile("./public/" + finalpath).then(function() {
         var worksheet = workbook.getWorksheet(1);
         var row = worksheet.getRow(1);
+        myrows = []
+        for(var i = 0; i<row.values.length; i++){
+          if(row.values[i] != undefined)
+          myrows.push(i)
+        }
         cells = []
-        for(var i = 2; i<worksheet.rowCount+1; i++){
-          for(var j = 1; j<worksheet.getRow(i).values.length; j++){
-            if(typeof worksheet.getRow(i).values[j] == 'object'){
-              cells.push(worksheet.getRow(i).values[j].result)
+        for(var i = 1; i<myrows.length + 1; i++){
+          for(var j = 1; j<worksheet.getRow(myrows[i]).values.length; j++){
+            if(typeof worksheet.getRow(myrows[i]).values[j] == 'object'){
+              cells.push(worksheet.getRow(myrows[i]).values[j].result)
             } else{
-            cells.push(worksheet.getRow(i).values[j])
+              if(worksheet.getRow(myrows[i]).values[j] != undefined){
+            cells.push(worksheet.getRow(myrows[i]).values[j])
+          }
           }
           }
         }
-        console.log(cells)
         var addressColumn = worksheet.getColumn(6);
         filename = worksheet.name;
         columns = row.values;
@@ -138,7 +144,6 @@ app.get("/select", (req, res) => {
     }
     if (items.length > 0) {
       mypath = "./public/files/" + items[items.length - 1];
-      console.log(items)
       console.log(mypath);
       console.log(path.extname(mypath));
       if (path.extname(mypath) != ".xlsx") {
@@ -160,7 +165,6 @@ app.get("/select", (req, res) => {
           }
           }
         }
-        console.log(cells)
         var addressColumn = worksheet.getColumn(6);
         filename = worksheet.name;
         columns = row.values;
@@ -325,7 +329,6 @@ app.post("/geocode", function(req, res) {
                   "There was an error geocoding this column. Please try again."
               });
             }
-            console.log(tempx);
             xcol = worksheet.getColumn(columnCount + 1);
             ycol = worksheet.getColumn(columnCount + 2);
             xcol.header = 'Latitude'
