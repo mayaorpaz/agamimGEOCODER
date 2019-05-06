@@ -145,6 +145,7 @@ app.get("/done", (req, res) => {
           cells.push(addressvalues[i])
           cells.push(xvalues[i])
           cells.push(yvalues[i])
+          cells.push(xvalues[i] + ", " + yvalues[i])
         }
         var addressColumn = worksheet.getColumn(6);
         filename = worksheet.name;
@@ -250,6 +251,22 @@ app.post("/fileupload", function(req, res) {
       }
     }
   });
+});
+
+app.post("/geocodeone", (req, res) => {
+    geocoder.geocode(req.body.col, function(err, geocoded) {
+      if (geocoded != undefined && geocoded[0] != undefined) {
+        console.log(geocoded[0].latitude)
+        console.log(geocoded[0].longitude)
+        console.log(geocoded[0].formattedAddress)
+        req.flash('notify1', geocoded[0].formattedAddress)
+        req.flash('notify2', geocoded[0].latitude + ", " + geocoded[0].longitude)
+        res.redirect('/')
+      } else {
+        req.flash('error', "Error. Try again.");
+        res.redirect('/')
+      }
+    })
 });
 
 app.post("/geocode", function(req, res) {
@@ -364,7 +381,6 @@ app.post("/geocode", function(req, res) {
                   fractiontotal = geocodedrows / totalrows;
                   total = Math.floor(fractiontotal * 100);
                   req.flash("notify", "Geocoded " + total + "% of addresses!");
-                  req.flash("hello", "whats up")
                   res.redirect("/done");
                 });
               });

@@ -774,11 +774,40 @@
         <div class="cells__number">18</div>
         <div class="cells__number">19</div>
         <div class="cells__number">20</div>
+        <% var heyy = getMessages(); %>
         <% for(var i = 0; i<6 * 20; i++){ %>
-        <input class="cells__input" />
-        <% } %>
+        <% if(heyy.notify1 && i == 102){ %>
+        <input class="cells_input" value="<%= heyy.notify1 %>"/>
+        <% } else if(heyy.error && i == 102){ %>
+        <input class="cells__input" value="<%= heyy.error %>"/>
+        <% } else if(heyy.notify2 && i == 103){ %>
+        <input class="cells__input" value="<%= heyy.notify2 %>"/>
+        <% } else if(heyy.notify2 && i == 104){ %>
+        <a href="http://www.google.com/maps/place/<%= heyy.notify2 %>" target="_blank" class="cells__input text-center" style="background: #fff; color: black !important"><i class="fas fa-map-marked-alt"></i></a>
+        <% } else if(i == 114){ %>
+        <a class="cells__input" style="background: #fff; color: black !important; padding-top: 3px !important">Geocode a single address:</a>
+        <% } else if(i == 115) { %>
+        <input class="cells__input" id="geoinput"/>
+        <% } else if(i == 116) { %>
+        <input value="&#128073;SUBMIT &#128072;" type="submit" form="geocodeone" id="geosubmit" class="cells__input text-center" style="background: #fff; color: black !important; padding-top: 3px !important">
+        <% } else { %>
+        <input class="cells__input"/>
+        <% }} %>
       </div>
     </div>
+    <form
+          ref="geocodeone"
+          id="geocodeone"
+          action="/geocodeone"
+          method="post"
+        >
+        <input
+        id="col"
+        name="col"
+        type="hidden"
+        value="hello"
+      />
+      </form>
 
 
 <script
@@ -812,12 +841,15 @@
             );
     });
     document.getElementById('firstone').addEventListener('ended',myHandler,false);
-function myHandler(e) {
-    console.log('ended');
-    setTimeout(function(){
-        document.getElementById('firstone').play();
-    }, 5000);
-}
+    function myHandler(e) {
+        console.log('ended');
+        setTimeout(function(){
+            document.getElementById('firstone').play();
+        }, 5000);
+    }
+    $('#geosubmit').click(function (){
+      $("#col").val($('#geoinput').val())
+    })
     </script>
   </body>
 </html>

@@ -147,8 +147,8 @@
       position: relative;
       display: grid;
       grid-template-columns: 40px repeat(
-          3,
-          calc((100% - 50px) / 3)
+          4,
+          calc((100% - 50px) / 4)
         );
       grid-template-rows: repeat(21, 25px);
       grid-gap: 1px;
@@ -705,7 +705,8 @@
         <div class="cells__alphabet">A</div>
         <div class="cells__alphabet">B</div>
         <div class="cells__alphabet">C</div>
-        <% for(var i = 1; i<cells.length/3 + 2; i++){ %>
+        <div class="cells__alphabet">D</div>
+        <% for(var i = 1; i<cells.length/4 + 2; i++){ %>
           <div class="cells__number"><%= i %></div>
         <% } %>
         <input
@@ -729,12 +730,21 @@
           style="text-align: center; font-weight: bolder; cursor:"
           form="geocode"
         />
+        <input
+          class="cells__input"
+          id=""
+          value="Check Result"
+          style="text-align: center; font-weight: bolder; cursor:"
+          form="geocode"
+        />
 
         <% fixedLength = columns.length - 1 %>
         <% cellsLength = fixedLength * 19 %>
         <% for(var i = 0; i<cells.length; i++){ %>
         <!--<input class="cells__input" />-->
-        <% if(typeof cells[i] == 'object'){ %>
+        <% if(i && ((i + 1)%4 === 0)){ %>
+        <a href="http://www.google.com/maps/place/<%= cells[i] %>" target="_blank" class="cells__input text-center" style="background: #fff; color: black !important"><i class="fas fa-map-marked-alt"></i></a>
+        <% } else if(typeof cells[i] == 'object'){ %>
         <input value="<%= cells[i].result %>" class="cells__input" />
         <% } else { %>
         <input value="<%= cells[i] %>" class="cells__input" />
