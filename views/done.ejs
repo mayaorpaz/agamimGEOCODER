@@ -143,17 +143,12 @@
       font: italic 700 18px "Merriweather", serif;
       border-right: none;
     }
-    <% var mycollen = 0 %>
-    <% for(var i = 1; i<columns.length; i++){ %>
-    <% if(columns[i] != undefined){ %>
-    <% mycollen++ %>
-    <% }} %>
     .cells {
       position: relative;
       display: grid;
       grid-template-columns: 40px repeat(
-          <%= mycollen %>,
-          calc((100% - 50px) / <%= mycollen %>)
+          3,
+          calc((100% - 50px) / 3)
         );
       grid-template-rows: repeat(21, 25px);
       grid-gap: 1px;
@@ -707,47 +702,43 @@
       </div>
       <div class="cells">
         <div class="cells__spacer"></div>
-        <% for(var i = 0; i<columns.length; i++){ %>
-        <% if(columns[i] != undefined){ %>
-        <div class="cells__alphabet"><%= alphabet[i] %></div>
-        <% }} %>
-        <div class="cells__number">1</div>
-        <div class="cells__number">2</div>
-        <div class="cells__number">3</div>
-        <div class="cells__number">4</div>
-        <div class="cells__number">5</div>
-        <div class="cells__number">6</div>
-        <div class="cells__number">7</div>
-        <div class="cells__number">8</div>
-        <div class="cells__number">9</div>
-        <div class="cells__number">10</div>
-        <div class="cells__number">11</div>
-        <div class="cells__number">12</div>
-        <div class="cells__number">13</div>
-        <div class="cells__number">14</div>
-        <div class="cells__number">15</div>
-        <div class="cells__number">16</div>
-        <div class="cells__number">17</div>
-        <div class="cells__number">18</div>
-        <div class="cells__number">19</div>
-        <div class="cells__number">20</div>
-        <% for(var i = 1; i<columns.length; i++){ %>
-        <% if(columns[i] != undefined){ %>
+        <div class="cells__alphabet">A</div>
+        <div class="cells__alphabet">B</div>
+        <div class="cells__alphabet">C</div>
+        <% for(var i = 1; i<cells.length/3 + 2; i++){ %>
+          <div class="cells__number"><%= i %></div>
+        <% } %>
         <input
           class="cells__input"
           id=""
-          value="<%= columns[i] %>"
+          value="Address"
           style="text-align: center; font-weight: bolder; cursor:"
           form="geocode"
         />
-        <% }} %>
+        <input
+          class="cells__input"
+          id=""
+          value="Latitude"
+          style="text-align: center; font-weight: bolder; cursor:"
+          form="geocode"
+        />
+        <input
+          class="cells__input"
+          id=""
+          value="Longitude"
+          style="text-align: center; font-weight: bolder; cursor:"
+          form="geocode"
+        />
 
         <% fixedLength = columns.length - 1 %>
         <% cellsLength = fixedLength * 19 %>
-        <% for(var i = 0; i<cellsLength; i++){ %>
+        <% for(var i = 0; i<cells.length; i++){ %>
         <!--<input class="cells__input" />-->
+        <% if(typeof cells[i] == 'object'){ %>
+        <input value="<%= cells[i].result %>" class="cells__input" />
+        <% } else { %>
         <input value="<%= cells[i] %>" class="cells__input" />
-        <% } %>
+        <% }} %>
       </div>
     </div>
 

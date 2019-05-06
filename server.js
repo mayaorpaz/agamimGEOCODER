@@ -84,6 +84,8 @@ alphabet = [
 // ENTER YOUR GOOGLE API KEY HERE
 var myapi = "ENTER YOUR GOOGLE API KEY HERE";
 
+var bigcolumn = 1
+
 var options = {
   provider: "google",
   apiKey: myapi
@@ -113,12 +115,22 @@ app.get("/done", (req, res) => {
       workbook.xlsx.readFile("./public/" + finalpath).then(function() {
         var worksheet = workbook.getWorksheet(1);
         var row = worksheet.getRow(1);
+        var addresscolumn = worksheet.getColumn(bigcolumn)
+        var addressvalues = addresscolumn.values
+        let xcolumn;
+        let ycolumn;
         myrows = [];
         for (var i = 0; i < row.values.length; i++) {
           if (row.values[i] != undefined) myrows.push(i);
+          if (row.values[i] == "Latitude"){
+            xcolumn = worksheet.getColumn(i)
+            ycolumn = worksheet.getColumn(i + 1)
+          }
         }
+        var xvalues = xcolumn.values
+        var yvalues = ycolumn.values
         cells = [];
-        for (var i = 1; i < myrows.length + 1; i++) {
+        /*for (var i = 1; i < myrows.length + 1; i++) {
           for (var j = 1; j < worksheet.getRow(myrows[i]).values.length; j++) {
             if (typeof worksheet.getRow(myrows[i]).values[j] == "object") {
               cells.push(worksheet.getRow(myrows[i]).values[j].result);
@@ -128,6 +140,11 @@ app.get("/done", (req, res) => {
               }
             }
           }
+        }*/
+        for(var i = 2; i<addressvalues.length; i++){
+          cells.push(addressvalues[i])
+          cells.push(xvalues[i])
+          cells.push(yvalues[i])
         }
         var addressColumn = worksheet.getColumn(6);
         filename = worksheet.name;
@@ -247,6 +264,7 @@ app.post("/geocode", function(req, res) {
         var worksheet = workbook.getWorksheet(1);
         var row = worksheet.getRow(1);
         var addressColumn = worksheet.getColumn(parseInt(req.body.col));
+        bigcolumn = parseInt(req.body.col)
         filename = worksheet.name;
         columns = row.values;
         columnCount = worksheet.columnCount;
@@ -346,6 +364,7 @@ app.post("/geocode", function(req, res) {
                   fractiontotal = geocodedrows / totalrows;
                   total = Math.floor(fractiontotal * 100);
                   req.flash("notify", "Geocoded " + total + "% of addresses!");
+                  req.flash("hello", "whats up")
                   res.redirect("/done");
                 });
               });
