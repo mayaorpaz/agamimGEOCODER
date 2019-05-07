@@ -850,6 +850,14 @@
     $('#geosubmit').click(function (){
       $("#col").val($('#geoinput').val())
     })
+    document.getElementById('geoinput').onkeypress = function(e){
+    if (!e) e = window.event;
+    var keyCode = e.keyCode || e.which;
+    if (keyCode == '13'){
+      $("#col").val($('#geoinput').val())
+      $("#geocodeone").submit()
+    }
+  }
     </script>
   </body>
 </html>

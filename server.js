@@ -84,7 +84,7 @@ alphabet = [
 // ENTER YOUR GOOGLE API KEY HERE
 var myapi = "ENTER YOUR GOOGLE API KEY HERE";
 
-var bigcolumn = 1
+var bigcolumn = 1;
 
 var options = {
   provider: "google",
@@ -115,20 +115,20 @@ app.get("/done", (req, res) => {
       workbook.xlsx.readFile("./public/" + finalpath).then(function() {
         var worksheet = workbook.getWorksheet(1);
         var row = worksheet.getRow(1);
-        var addresscolumn = worksheet.getColumn(bigcolumn)
-        var addressvalues = addresscolumn.values
+        var addresscolumn = worksheet.getColumn(bigcolumn);
+        var addressvalues = addresscolumn.values;
         let xcolumn;
         let ycolumn;
         myrows = [];
         for (var i = 0; i < row.values.length; i++) {
           if (row.values[i] != undefined) myrows.push(i);
-          if (row.values[i] == "Latitude"){
-            xcolumn = worksheet.getColumn(i)
-            ycolumn = worksheet.getColumn(i + 1)
+          if (row.values[i] == "Latitude") {
+            xcolumn = worksheet.getColumn(i);
+            ycolumn = worksheet.getColumn(i + 1);
           }
         }
-        var xvalues = xcolumn.values
-        var yvalues = ycolumn.values
+        var xvalues = xcolumn.values;
+        var yvalues = ycolumn.values;
         cells = [];
         /*for (var i = 1; i < myrows.length + 1; i++) {
           for (var j = 1; j < worksheet.getRow(myrows[i]).values.length; j++) {
@@ -141,11 +141,11 @@ app.get("/done", (req, res) => {
             }
           }
         }*/
-        for(var i = 2; i<addressvalues.length; i++){
-          cells.push(addressvalues[i])
-          cells.push(xvalues[i])
-          cells.push(yvalues[i])
-          cells.push(xvalues[i] + ", " + yvalues[i])
+        for (var i = 2; i < addressvalues.length; i++) {
+          cells.push(addressvalues[i]);
+          cells.push(xvalues[i]);
+          cells.push(yvalues[i]);
+          cells.push(xvalues[i] + ", " + yvalues[i]);
         }
         var addressColumn = worksheet.getColumn(6);
         filename = worksheet.name;
@@ -254,19 +254,19 @@ app.post("/fileupload", function(req, res) {
 });
 
 app.post("/geocodeone", (req, res) => {
-    geocoder.geocode(req.body.col, function(err, geocoded) {
-      if (geocoded != undefined && geocoded[0] != undefined) {
-        console.log(geocoded[0].latitude)
-        console.log(geocoded[0].longitude)
-        console.log(geocoded[0].formattedAddress)
-        req.flash('notify1', geocoded[0].formattedAddress)
-        req.flash('notify2', geocoded[0].latitude + ", " + geocoded[0].longitude)
-        res.redirect('/')
-      } else {
-        req.flash('error', "Error. Try again.");
-        res.redirect('/')
-      }
-    })
+  geocoder.geocode(req.body.col, function(err, geocoded) {
+    if (geocoded != undefined && geocoded[0] != undefined) {
+      console.log(geocoded[0].latitude);
+      console.log(geocoded[0].longitude);
+      console.log(geocoded[0].formattedAddress);
+      req.flash("notify1", geocoded[0].formattedAddress);
+      req.flash("notify2", geocoded[0].latitude + ", " + geocoded[0].longitude);
+      res.redirect("/");
+    } else {
+      req.flash("error", "Error. Try again.");
+      res.redirect("/");
+    }
+  });
 });
 
 app.post("/geocode", function(req, res) {
@@ -281,7 +281,7 @@ app.post("/geocode", function(req, res) {
         var worksheet = workbook.getWorksheet(1);
         var row = worksheet.getRow(1);
         var addressColumn = worksheet.getColumn(parseInt(req.body.col));
-        bigcolumn = parseInt(req.body.col)
+        bigcolumn = parseInt(req.body.col);
         filename = worksheet.name;
         columns = row.values;
         columnCount = worksheet.columnCount;
