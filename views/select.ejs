@@ -519,6 +519,12 @@
         background-position: 0 -100%;
         color: #217245;
       }
+      <% for(var i = 1; i<columns.length; i++){ %>
+      #<%= columns[i].replace(/[\s.;,?%0-9]/, '') %>:hover {
+        background-color: #217245;
+        color: white
+      }
+        <% } %>
     </style>
   </head>
   <body style="background-color: #217245">
